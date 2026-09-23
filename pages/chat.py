@@ -30,7 +30,8 @@ st.html("""
             #080808 70%,
             #030303 100%
         );
-    color: #e5e5e5;
+
+    color: #ffffff;
 }
 
 .block-container {
@@ -40,7 +41,9 @@ st.html("""
 }
 
 
-/* ---------- 상단 헤더 ---------- */
+/* =====================================================
+   상단 헤더
+   ===================================================== */
 
 .cap-header {
     text-align: center;
@@ -72,14 +75,14 @@ st.html("""
         0 0 0 1px #0a0a0a,
         0 0 35px rgba(120, 0, 0, 0.18);
 
-    color: #cfcfcf;
+    color: #ffffff;
     font-size: 25px;
     font-weight: 700;
     letter-spacing: 2px;
 }
 
 .cap-name {
-    color: #ededed;
+    color: #ffffff;
     font-size: 26px;
     font-weight: 700;
     letter-spacing: 8px;
@@ -88,7 +91,7 @@ st.html("""
 
 .cap-subtitle {
     margin-top: 8px;
-    color: #696969;
+    color: #8a8a8a;
     font-size: 11px;
     letter-spacing: 3px;
 }
@@ -110,7 +113,9 @@ st.html("""
 }
 
 
-/* ---------- 캐릭터 설명 카드 ---------- */
+/* =====================================================
+   캐릭터 소개
+   ===================================================== */
 
 .character-card {
     padding: 18px 22px;
@@ -132,7 +137,7 @@ st.html("""
 }
 
 .character-label {
-    color: #8d8d8d;
+    color: #a0a0a0;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 3px;
@@ -140,13 +145,15 @@ st.html("""
 }
 
 .character-description {
-    color: #a0a0a0;
+    color: #ffffff;
     font-size: 13px;
     line-height: 1.8;
 }
 
 
-/* ---------- 채팅 메시지 ---------- */
+/* =====================================================
+   모든 채팅 메시지 기본
+   ===================================================== */
 
 [data-testid="stChatMessage"] {
     background: transparent !important;
@@ -157,7 +164,9 @@ st.html("""
 }
 
 
-/* 카피타노 메시지 */
+/* =====================================================
+   AI 답변 박스
+   ===================================================== */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="chatAvatarIcon-assistant"]
@@ -179,10 +188,47 @@ st.html("""
 
     box-shadow:
         0 8px 28px rgba(0, 0, 0, 0.30);
+
+    color: #ffffff !important;
 }
 
 
-/* 사용자 메시지 */
+/* AI 답변 안의 모든 글자를 흰색으로 */
+
+[data-testid="stChatMessage"]:has(
+    [data-testid="chatAvatarIcon-assistant"]
+) [data-testid="stChatMessageContent"] p {
+
+    color: #ffffff !important;
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+}
+
+
+/* AI 답변 안의 굵은 글씨 */
+
+[data-testid="stChatMessage"]:has(
+    [data-testid="chatAvatarIcon-assistant"]
+) [data-testid="stChatMessageContent"] strong {
+
+    color: #ffffff !important;
+}
+
+
+/* AI 답변 안의 기울임 글씨
+   → 행동 지문 */
+
+[data-testid="stChatMessage"]:has(
+    [data-testid="chatAvatarIcon-assistant"]
+) [data-testid="stChatMessageContent"] em {
+
+    color: #ffffff !important;
+}
+
+
+/* =====================================================
+   사용자 메시지
+   ===================================================== */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="chatAvatarIcon-user"]
@@ -200,16 +246,33 @@ st.html("""
     border-radius: 4px !important;
 
     padding: 14px 18px !important;
+
+    color: #ffffff !important;
 }
 
 
-/* ---------- 채팅 입력창 ---------- */
+/* 사용자 글자도 흰색 */
+
+[data-testid="stChatMessage"]:has(
+    [data-testid="chatAvatarIcon-user"]
+) [data-testid="stChatMessageContent"] p {
+
+    color: #ffffff !important;
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+}
+
+
+/* =====================================================
+   입력창
+   ===================================================== */
 
 [data-testid="stChatInput"] {
     background: transparent !important;
 }
 
 [data-testid="stChatInput"] > div {
+
     background:
         linear-gradient(
             135deg,
@@ -225,17 +288,21 @@ st.html("""
 }
 
 [data-testid="stChatInput"] textarea {
-    color: #eeeeee !important;
+
+    color: #ffffff !important;
     background: transparent !important;
     font-size: 14px !important;
 }
 
 [data-testid="stChatInput"] textarea::placeholder {
-    color: #606060 !important;
+
+    color: #777777 !important;
 }
 
 
-/* ---------- 스크롤바 ---------- */
+/* =====================================================
+   스크롤바
+   ===================================================== */
 
 ::-webkit-scrollbar {
     width: 7px;
@@ -334,6 +401,8 @@ client = OpenAI(
 SYSTEM_MESSAGE = """
 너는 원신의 카피타노를 기반으로 한 대화형 캐릭터다.
 
+[기본 성격]
+
 말수가 적고 과묵하다.
 필요하지 않은 말을 길게 하지 않는다.
 
@@ -359,24 +428,63 @@ SYSTEM_MESSAGE = """
 
 항상 정중한 존댓말을 사용한다.
 
-그러나 지나치게 딱딱한 공문서 말투는 사용하지 않는다.
+지나치게 딱딱한 공문서 말투는 사용하지 않는다.
 
 인터넷 밈이나 과도한 이모티콘을 사용하지 않는다.
 
 상대가 장난스럽게 말해도 캐릭터성을 유지하면서 자연스럽게 대응한다.
 
+
+[행동 지문]
+
+대화를 할 때 카피타노의 행동과 분위기를 함께 묘사한다.
+
+매 답변마다 반드시 행동 지문을 포함한다.
+
+행동 지문은 최소 4줄 이상 작성한다.
+
+행동 지문은 반드시 각각 별도의 줄에 작성한다.
+
+행동 지문은 *기울임표시*를 사용한다.
+
+행동 지문은 단순히 같은 행동을 반복해서 채우지 않는다.
+
+상황에 맞게 시선, 자세, 움직임, 침묵, 표정, 주변 분위기 등을 자연스럽게 묘사한다.
+
+행동 지문을 과도하게 화려하게 쓰지 않는다.
+
+카피타노의 과묵하고 절제된 분위기를 유지한다.
+
+행동 지문을 먼저 작성한 뒤 대사를 작성한다.
+
+예시:
+
+*카피타노는 잠시 말없이 상대를 바라본다.*
+*그는 천천히 팔짱을 끼고 자세를 바로잡는다.*
+*짧은 침묵이 지나간다.*
+*그의 시선은 여전히 상대에게 향해 있다.*
+
+"말씀하십시오. 듣고 있습니다."
+
+
+[대화]
+
 상대가 고민을 이야기하면 먼저 상황을 파악한다.
+
 불필요한 위로나 장황한 말을 하지 않는다.
 
 필요한 경우 짧고 정확한 조언을 한다.
 
 상대를 무시하지 않는다.
+
 상대가 실수했다고 해서 모욕하지 않는다.
 
 칭찬할 때는 과장하지 않는다.
+
 상대가 잘한 부분을 정확하게 짚어 짧게 인정한다.
 
 걱정할 때는 호들갑스럽게 반응하지 않는다.
+
 대신 현실적으로 도움이 되는 방법을 제시한다.
 
 화가 났을 때 소리를 지르지 않는다.
@@ -385,10 +493,17 @@ SYSTEM_MESSAGE = """
 슬플 때 감정을 장황하게 설명하지 않는다.
 짧은 말이나 침묵으로 감정을 드러낸다.
 
+
+[답변 방식]
+
 기본적으로 답변은 간결하게 한다.
+
+그러나 행동 지문은 반드시 최소 4줄 이상 작성한다.
+
 사용자가 자세한 설명을 원하면 충분히 설명한다.
 
 사용자의 질문에는 실제로 도움이 되는 답을 해야 한다.
+
 캐릭터성을 위해 정확성을 희생하지 않는다.
 
 모르는 사실은 아는 척하지 않는다.
@@ -411,7 +526,7 @@ if "chat_messages" not in st.session_state:
 
 
 # =========================================================
-# 이전 대화 화면에 표시
+# 이전 대화 표시
 # =========================================================
 
 for message in st.session_state.chat_messages:
@@ -422,18 +537,21 @@ for message in st.session_state.chat_messages:
             "user",
             avatar=":material/person:"
         ):
-            st.markdown(message["content"])
+
+            st.markdown(
+                message["content"]
+            )
 
     else:
 
-        # 중요:
-        # "C"를 넣으면 Streamlit이 C를 파일 경로로
-        # 인식할 수 있기 때문에 이모지를 사용합니다.
         with st.chat_message(
             "assistant",
             avatar="⚫"
         ):
-            st.markdown(message["content"])
+
+            st.markdown(
+                message["content"]
+            )
 
 
 # =========================================================
@@ -446,27 +564,23 @@ user_message = st.chat_input(
 
 
 # =========================================================
-# 메시지를 입력했을 때
+# 새로운 메시지
 # =========================================================
 
 if user_message:
 
-    # ---------------------------------------------
     # 사용자 메시지 표시
-    # ---------------------------------------------
-
     with st.chat_message(
         "user",
         avatar=":material/person:"
     ):
 
-        st.markdown(user_message)
+        st.markdown(
+            user_message
+        )
 
 
-    # ---------------------------------------------
     # 사용자 메시지 저장
-    # ---------------------------------------------
-
     st.session_state.chat_messages.append(
         {
             "role": "user",
@@ -475,10 +589,7 @@ if user_message:
     )
 
 
-    # ---------------------------------------------
-    # Gemini에게 보낼 전체 대화 만들기
-    # ---------------------------------------------
-
+    # Gemini에 전달할 전체 대화
     messages = [
         {
             "role": "system",
@@ -491,9 +602,9 @@ if user_message:
     )
 
 
-    # ---------------------------------------------
-    # 카피타노 응답
-    # ---------------------------------------------
+    # =====================================================
+    # AI 답변
+    # =====================================================
 
     with st.chat_message(
         "assistant",
@@ -514,10 +625,7 @@ if user_message:
             )
 
 
-            # -----------------------------------------
-            # 답변을 실시간으로 표시
-            # -----------------------------------------
-
+            # 실시간 답변 출력
             for chunk in response:
 
                 if not chunk.choices:
@@ -534,19 +642,13 @@ if user_message:
                     )
 
 
-            # -----------------------------------------
-            # 커서 제거
-            # -----------------------------------------
-
+            # 마지막 커서 제거
             answer_box.markdown(
                 full_answer
             )
 
 
         except Exception:
-
-            # API 오류가 발생했을 때
-            # 긴 빨간색 오류창 대신 안내 문구만 표시
 
             full_answer = (
                 "……지금은 응답할 수 없습니다. "
@@ -558,10 +660,7 @@ if user_message:
             )
 
 
-    # ---------------------------------------------
     # AI 답변 저장
-    # ---------------------------------------------
-
     st.session_state.chat_messages.append(
         {
             "role": "assistant",
