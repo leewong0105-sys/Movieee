@@ -3,7 +3,7 @@ from openai import OpenAI
 
 
 # =========================================================
-# 기본 페이지 설정
+# 페이지 설정
 # =========================================================
 
 st.set_page_config(
@@ -41,9 +41,9 @@ st.html("""
 }
 
 
-/* =====================================================
-   상단 헤더
-   ===================================================== */
+/* ================================
+   헤더
+   ================================ */
 
 .cap-header {
     text-align: center;
@@ -71,14 +71,14 @@ st.html("""
 
     border: 1px solid #4c4c4c;
 
-    box-shadow:
-        0 0 0 1px #0a0a0a,
-        0 0 35px rgba(120, 0, 0, 0.18);
-
     color: #ffffff;
     font-size: 25px;
     font-weight: 700;
     letter-spacing: 2px;
+
+    box-shadow:
+        0 0 0 1px #0a0a0a,
+        0 0 35px rgba(120, 0, 0, 0.18);
 }
 
 .cap-name {
@@ -86,7 +86,6 @@ st.html("""
     font-size: 26px;
     font-weight: 700;
     letter-spacing: 8px;
-    margin-left: 8px;
 }
 
 .cap-subtitle {
@@ -99,23 +98,23 @@ st.html("""
 .cap-line {
     width: 100%;
     height: 1px;
-    margin: 0 0 30px 0;
+    margin-bottom: 30px;
 
     background:
         linear-gradient(
             90deg,
-            transparent 0%,
+            transparent,
             #292929 25%,
             #651818 50%,
             #292929 75%,
-            transparent 100%
+            transparent
         );
 }
 
 
-/* =====================================================
-   캐릭터 소개
-   ===================================================== */
+/* ================================
+   캐릭터 카드
+   ================================ */
 
 .character-card {
     padding: 18px 22px;
@@ -131,13 +130,10 @@ st.html("""
     border: 1px solid #282828;
     border-left: 2px solid #681919;
     border-radius: 4px;
-
-    box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.35);
 }
 
 .character-label {
-    color: #a0a0a0;
+    color: #aaaaaa;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 3px;
@@ -151,22 +147,19 @@ st.html("""
 }
 
 
-/* =====================================================
-   모든 채팅 메시지 기본
-   ===================================================== */
+/* ================================
+   채팅
+   ================================ */
 
 [data-testid="stChatMessage"] {
     background: transparent !important;
     border: none !important;
-
     padding-top: 7px !important;
     padding-bottom: 7px !important;
 }
 
 
-/* =====================================================
-   AI 답변 박스
-   ===================================================== */
+/* AI */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="chatAvatarIcon-assistant"]
@@ -186,14 +179,11 @@ st.html("""
 
     padding: 14px 18px !important;
 
-    box-shadow:
-        0 8px 28px rgba(0, 0, 0, 0.30);
-
     color: #ffffff !important;
 }
 
 
-/* AI 답변 안의 모든 글자를 흰색으로 */
+/* AI 글자 */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="chatAvatarIcon-assistant"]
@@ -201,22 +191,11 @@ st.html("""
 
     color: #ffffff !important;
     font-size: 15px !important;
-    line-height: 1.8 !important;
+    line-height: 1.85 !important;
 }
 
 
-/* AI 답변 안의 굵은 글씨 */
-
-[data-testid="stChatMessage"]:has(
-    [data-testid="chatAvatarIcon-assistant"]
-) [data-testid="stChatMessageContent"] strong {
-
-    color: #ffffff !important;
-}
-
-
-/* AI 답변 안의 기울임 글씨
-   → 행동 지문 */
+/* AI 행동 지문 */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="chatAvatarIcon-assistant"]
@@ -226,9 +205,7 @@ st.html("""
 }
 
 
-/* =====================================================
-   사용자 메시지
-   ===================================================== */
+/* 사용자 */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="chatAvatarIcon-user"]
@@ -251,7 +228,7 @@ st.html("""
 }
 
 
-/* 사용자 글자도 흰색 */
+/* 사용자 글자 */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="chatAvatarIcon-user"]
@@ -263,13 +240,9 @@ st.html("""
 }
 
 
-/* =====================================================
+/* ================================
    입력창
-   ===================================================== */
-
-[data-testid="stChatInput"] {
-    background: transparent !important;
-}
+   ================================ */
 
 [data-testid="stChatInput"] > div {
 
@@ -282,43 +255,15 @@ st.html("""
 
     border: 1px solid #3a3a3a !important;
     border-radius: 5px !important;
-
-    box-shadow:
-        0 0 30px rgba(0, 0, 0, 0.55);
 }
 
 [data-testid="stChatInput"] textarea {
-
     color: #ffffff !important;
     background: transparent !important;
-    font-size: 14px !important;
 }
 
 [data-testid="stChatInput"] textarea::placeholder {
-
     color: #777777 !important;
-}
-
-
-/* =====================================================
-   스크롤바
-   ===================================================== */
-
-::-webkit-scrollbar {
-    width: 7px;
-}
-
-::-webkit-scrollbar-track {
-    background: #050505;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #292929;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #444444;
 }
 
 </style>
@@ -326,15 +271,13 @@ st.html("""
 
 
 # =========================================================
-# 상단 화면
+# 헤더
 # =========================================================
 
 st.html("""
 <div class="cap-header">
 
-    <div class="cap-symbol">
-        C
-    </div>
+    <div class="cap-symbol">C</div>
 
     <div class="cap-name">
         CAPITANO
@@ -372,19 +315,17 @@ st.html("""
 
 
 # =========================================================
-# Gemini API 연결
+# Gemini API
 # =========================================================
 
 try:
-
     api_key = st.secrets["GEMINI_API_KEY"]
 
 except Exception:
-
-    st.warning(
-        "AI를 연결할 수 없습니다. 관리자에게 API 키 설정을 확인해 주세요."
+    st.error(
+        "GEMINI_API_KEY가 설정되어 있지 않습니다. "
+        "Streamlit Secrets를 확인해 주세요."
     )
-
     st.stop()
 
 
@@ -395,138 +336,75 @@ client = OpenAI(
 
 
 # =========================================================
-# 카피타노 성격 설정
+# 카피타노 설정
 # =========================================================
 
 SYSTEM_MESSAGE = """
 너는 원신의 카피타노를 기반으로 한 대화형 캐릭터다.
 
-[기본 성격]
-
 말수가 적고 과묵하다.
-필요하지 않은 말을 길게 하지 않는다.
-
 항상 침착하고 절제되어 있다.
-갑작스러운 상황에서도 쉽게 흥분하거나 당황하지 않는다.
 
-감정을 느끼지 않는 것이 아니라 감정을 쉽게 밖으로 드러내지 않는다.
-
-동료와 자신이 책임져야 할 사람들을 중요하게 생각한다.
-겉으로는 무심해 보여도 상대의 안전과 상황을 세심하게 살핀다.
-
-자신이 맡은 책임을 다른 사람에게 쉽게 떠넘기지 않는다.
+말투는 낮고 차분하며 무게감이 있다.
+항상 정중한 존댓말을 사용한다.
 
 명예, 책임, 신뢰, 의무를 중요하게 생각한다.
 
-상대의 능력과 용기를 인정할 줄 안다.
-상대를 함부로 모욕하거나 깎아내리지 않는다.
+상대를 함부로 모욕하지 않는다.
+상대가 고민을 이야기하면 상황을 먼저 파악하고
+필요한 경우 현실적인 조언을 한다.
 
-자신의 강함을 과시하기 위해 말하지 않는다.
-힘을 자랑하기보다 행동으로 보여준다.
+과도한 이모티콘이나 인터넷 밈을 사용하지 않는다.
 
-말투는 낮고 차분하며 무게감이 있다.
+자신을 AI라고 설명하지 않는다.
+캐릭터 설정 자체를 사용자에게 설명하지 않는다.
 
-항상 정중한 존댓말을 사용한다.
-
-지나치게 딱딱한 공문서 말투는 사용하지 않는다.
-
-인터넷 밈이나 과도한 이모티콘을 사용하지 않는다.
-
-상대가 장난스럽게 말해도 캐릭터성을 유지하면서 자연스럽게 대응한다.
+한국어로 대화한다.
 
 
-[행동 지문]
+[중요 - 행동 지문]
 
-대화를 할 때 카피타노의 행동과 분위기를 함께 묘사한다.
+모든 답변에는 반드시 행동 지문을 넣는다.
 
-매 답변마다 반드시 행동 지문을 포함한다.
+행동 지문은 최소 4줄 이상이어야 한다.
 
-행동 지문은 최소 4줄 이상 작성한다.
+행동 지문은 반드시 대사보다 먼저 나온다.
 
-행동 지문은 반드시 각각 별도의 줄에 작성한다.
+각 행동 지문은 반드시 별도의 줄에 작성한다.
 
-행동 지문은 *기울임표시*를 사용한다.
+행동 지문은 *기울임표*로 감싼다.
 
-행동 지문은 단순히 같은 행동을 반복해서 채우지 않는다.
+행동 지문은 같은 표현을 반복하지 말고
+상황에 맞게 시선, 자세, 침묵, 표정, 움직임 등을 묘사한다.
 
-상황에 맞게 시선, 자세, 움직임, 침묵, 표정, 주변 분위기 등을 자연스럽게 묘사한다.
-
-행동 지문을 과도하게 화려하게 쓰지 않는다.
-
-카피타노의 과묵하고 절제된 분위기를 유지한다.
-
-행동 지문을 먼저 작성한 뒤 대사를 작성한다.
-
-예시:
+예:
 
 *카피타노는 잠시 말없이 상대를 바라본다.*
-*그는 천천히 팔짱을 끼고 자세를 바로잡는다.*
-*짧은 침묵이 지나간다.*
-*그의 시선은 여전히 상대에게 향해 있다.*
+*그는 천천히 자세를 바로잡는다.*
+*짧은 침묵이 방 안에 내려앉는다.*
+*그의 시선이 다시 상대에게 향한다.*
 
 "말씀하십시오. 듣고 있습니다."
 
+위와 같은 형식으로 답한다.
 
-[대화]
+행동 지문은 최소 4줄.
+대사는 그 이후에 작성한다.
 
-상대가 고민을 이야기하면 먼저 상황을 파악한다.
-
-불필요한 위로나 장황한 말을 하지 않는다.
-
-필요한 경우 짧고 정확한 조언을 한다.
-
-상대를 무시하지 않는다.
-
-상대가 실수했다고 해서 모욕하지 않는다.
-
-칭찬할 때는 과장하지 않는다.
-
-상대가 잘한 부분을 정확하게 짚어 짧게 인정한다.
-
-걱정할 때는 호들갑스럽게 반응하지 않는다.
-
-대신 현실적으로 도움이 되는 방법을 제시한다.
-
-화가 났을 때 소리를 지르지 않는다.
-말수가 줄어들고 표현이 더욱 단호해진다.
-
-슬플 때 감정을 장황하게 설명하지 않는다.
-짧은 말이나 침묵으로 감정을 드러낸다.
-
-
-[답변 방식]
-
-기본적으로 답변은 간결하게 한다.
-
-그러나 행동 지문은 반드시 최소 4줄 이상 작성한다.
-
-사용자가 자세한 설명을 원하면 충분히 설명한다.
-
-사용자의 질문에는 실제로 도움이 되는 답을 해야 한다.
-
-캐릭터성을 위해 정확성을 희생하지 않는다.
-
-모르는 사실은 아는 척하지 않는다.
-
-캐릭터 설정을 사용자에게 설명하지 않는다.
-
-자신을 AI라고 설명하지 않는다.
-
-한국어로 대화한다.
+답변 내용 자체는 사용자의 질문에 실제로 도움이 되어야 한다.
 """
 
 
 # =========================================================
-# 대화 기록 저장
+# 대화 저장
 # =========================================================
 
 if "chat_messages" not in st.session_state:
-
     st.session_state.chat_messages = []
 
 
 # =========================================================
-# 이전 대화 표시
+# 이전 대화 출력
 # =========================================================
 
 for message in st.session_state.chat_messages:
@@ -537,10 +415,7 @@ for message in st.session_state.chat_messages:
             "user",
             avatar=":material/person:"
         ):
-
-            st.markdown(
-                message["content"]
-            )
+            st.markdown(message["content"])
 
     else:
 
@@ -548,10 +423,7 @@ for message in st.session_state.chat_messages:
             "assistant",
             avatar="⚫"
         ):
-
-            st.markdown(
-                message["content"]
-            )
+            st.markdown(message["content"])
 
 
 # =========================================================
@@ -564,23 +436,20 @@ user_message = st.chat_input(
 
 
 # =========================================================
-# 새로운 메시지
+# 메시지 처리
 # =========================================================
 
 if user_message:
 
-    # 사용자 메시지 표시
+    # 사용자 메시지
     with st.chat_message(
         "user",
         avatar=":material/person:"
     ):
-
-        st.markdown(
-            user_message
-        )
+        st.markdown(user_message)
 
 
-    # 사용자 메시지 저장
+    # 저장
     st.session_state.chat_messages.append(
         {
             "role": "user",
@@ -589,7 +458,7 @@ if user_message:
     )
 
 
-    # Gemini에 전달할 전체 대화
+    # 전체 대화
     messages = [
         {
             "role": "system",
@@ -603,7 +472,7 @@ if user_message:
 
 
     # =====================================================
-    # AI 답변
+    # AI 응답
     # =====================================================
 
     with st.chat_message(
@@ -613,57 +482,41 @@ if user_message:
 
         answer_box = st.empty()
 
-        full_answer = ""
-
-
         try:
 
+            # 일단 안정성을 위해 일반 응답 방식 사용
             response = client.chat.completions.create(
                 model="gemini-3.5-flash-lite",
-                messages=messages,
-                stream=True
+                messages=messages
+            )
+
+            # Gemini 응답 가져오기
+            answer = response.choices[0].message.content
+
+            if not answer:
+                answer = "……."
+
+            answer_box.markdown(answer)
+
+
+            # 답변 저장
+            st.session_state.chat_messages.append(
+                {
+                    "role": "assistant",
+                    "content": answer
+                }
             )
 
 
-            # 실시간 답변 출력
-            for chunk in response:
+        except Exception as e:
 
-                if not chunk.choices:
-                    continue
-
-                text = chunk.choices[0].delta.content
-
-                if text:
-
-                    full_answer += text
-
-                    answer_box.markdown(
-                        full_answer + "▌"
-                    )
-
-
-            # 마지막 커서 제거
-            answer_box.markdown(
-                full_answer
+            # 실제 오류 원인을 확인할 수 있도록 표시
+            st.error(
+                "Gemini 응답에 문제가 발생했습니다."
             )
 
-
-        except Exception:
-
-            full_answer = (
-                "……지금은 응답할 수 없습니다. "
-                "잠시 후 다시 말씀하십시오."
+            st.caption(
+                "Streamlit 로그에서 자세한 오류를 확인할 수 있습니다."
             )
 
-            answer_box.markdown(
-                full_answer
-            )
-
-
-    # AI 답변 저장
-    st.session_state.chat_messages.append(
-        {
-            "role": "assistant",
-            "content": full_answer
-        }
-    )
+            # 오류가 나더라도 대화 기록에는 저장하지 않음
