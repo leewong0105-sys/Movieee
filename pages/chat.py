@@ -3,7 +3,7 @@ from openai import OpenAI
 
 
 # =========================================================
-# 1. 페이지 설정
+# 기본 페이지 설정
 # =========================================================
 
 st.set_page_config(
@@ -15,297 +15,251 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. 전체 화면 디자인
+# 화면 디자인
 # =========================================================
-# HTML과 CSS는 st.html()을 사용합니다.
-# 이렇게 하면 HTML 태그가 화면에 글자로 나타나는 문제를 피할 수 있습니다.
 
 st.html("""
 <style>
 
-    /* ================================
-       전체 배경
-       ================================ */
+.stApp {
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            #252525 0%,
+            #111111 35%,
+            #080808 70%,
+            #030303 100%
+        );
+    color: #e5e5e5;
+}
+
+.block-container {
+    max-width: 920px;
+    padding-top: 2rem;
+    padding-bottom: 7rem;
+}
+
+
+/* ---------- 상단 헤더 ---------- */
+
+.cap-header {
+    text-align: center;
+    padding: 20px 0 26px 0;
+}
+
+.cap-symbol {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 16px auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #353535 0%,
+            #171717 60%,
+            #090909 100%
+        );
+
+    border: 1px solid #4c4c4c;
+
+    box-shadow:
+        0 0 0 1px #0a0a0a,
+        0 0 35px rgba(120, 0, 0, 0.18);
+
+    color: #cfcfcf;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.cap-name {
+    color: #ededed;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    margin-left: 8px;
+}
+
+.cap-subtitle {
+    margin-top: 8px;
+    color: #696969;
+    font-size: 11px;
+    letter-spacing: 3px;
+}
+
+.cap-line {
+    width: 100%;
+    height: 1px;
+    margin: 0 0 30px 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            #292929 25%,
+            #651818 50%,
+            #292929 75%,
+            transparent 100%
+        );
+}
+
+
+/* ---------- 캐릭터 설명 카드 ---------- */
+
+.character-card {
+    padding: 18px 22px;
+    margin-bottom: 32px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(30, 30, 30, 0.95),
+            rgba(12, 12, 12, 0.98)
+        );
 
-    .stApp {
-        background:
-            radial-gradient(
-                circle at 50% -10%,
-                #252525 0%,
-                #111111 35%,
-                #080808 70%,
-                #030303 100%
-            );
-        color: #e5e5e5;
-    }
+    border: 1px solid #282828;
+    border-left: 2px solid #681919;
+    border-radius: 4px;
 
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35);
+}
 
-    /* ================================
-       Streamlit 기본 여백
-       ================================ */
+.character-label {
+    color: #8d8d8d;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    margin-bottom: 9px;
+}
 
-    .block-container {
-        max-width: 920px;
-        padding-top: 2rem;
-        padding-bottom: 7rem;
-    }
-
-
-    /* ================================
-       상단 캐릭터 헤더
-       ================================ */
+.character-description {
+    color: #a0a0a0;
+    font-size: 13px;
+    line-height: 1.8;
+}
 
-    .cap-header {
-        text-align: center;
-        padding: 20px 0 26px 0;
-    }
 
-    .cap-symbol {
-        width: 72px;
-        height: 72px;
+/* ---------- 채팅 메시지 ---------- */
 
-        margin: 0 auto 16px auto;
+[data-testid="stChatMessage"] {
+    background: transparent !important;
+    border: none !important;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
 
-        border-radius: 50%;
 
-        background:
-            radial-gradient(
-                circle,
-                #353535 0%,
-                #171717 60%,
-                #090909 100%
-            );
+/* 카피타노 메시지 */
 
-        border: 1px solid #4c4c4c;
+[data-testid="stChatMessage"]:has(
+    [data-testid="chatAvatarIcon-assistant"]
+) [data-testid="stChatMessageContent"] {
 
-        box-shadow:
-            0 0 0 1px #0a0a0a,
-            0 0 35px rgba(120, 0, 0, 0.18);
+    background:
+        linear-gradient(
+            135deg,
+            #191919,
+            #0e0e0e
+        ) !important;
 
-        color: #cfcfcf;
-        font-size: 25px;
-        font-weight: 700;
-        letter-spacing: 2px;
-    }
+    border: 1px solid #292929 !important;
+    border-left: 2px solid #641919 !important;
 
+    border-radius: 4px !important;
 
-    .cap-name {
-        color: #ededed;
-        font-size: 26px;
-        font-weight: 700;
-        letter-spacing: 8px;
-        margin-left: 8px;
-    }
+    padding: 14px 18px !important;
 
+    box-shadow:
+        0 8px 28px rgba(0, 0, 0, 0.30);
+}
 
-    .cap-subtitle {
-        margin-top: 8px;
 
-        color: #696969;
+/* 사용자 메시지 */
 
-        font-size: 11px;
-        letter-spacing: 3px;
-    }
+[data-testid="stChatMessage"]:has(
+    [data-testid="chatAvatarIcon-user"]
+) [data-testid="stChatMessageContent"] {
 
+    background:
+        linear-gradient(
+            135deg,
+            #242424,
+            #181818
+        ) !important;
 
-    /* ================================
-       붉은 구분선
-       ================================ */
+    border: 1px solid #303030 !important;
 
-    .cap-line {
-        width: 100%;
-        height: 1px;
+    border-radius: 4px !important;
 
-        margin: 0 0 30px 0;
+    padding: 14px 18px !important;
+}
 
-        background:
-            linear-gradient(
-                90deg,
-                transparent 0%,
-                #292929 25%,
-                #651818 50%,
-                #292929 75%,
-                transparent 100%
-            );
-    }
 
+/* ---------- 채팅 입력창 ---------- */
 
-    /* ================================
-       캐릭터 소개
-       ================================ */
+[data-testid="stChatInput"] {
+    background: transparent !important;
+}
 
-    .character-card {
-        padding: 18px 22px;
-        margin-bottom: 32px;
+[data-testid="stChatInput"] > div {
+    background:
+        linear-gradient(
+            135deg,
+            #191919,
+            #0d0d0d
+        ) !important;
 
-        background:
-            linear-gradient(
-                135deg,
-                rgba(30, 30, 30, 0.95),
-                rgba(12, 12, 12, 0.98)
-            );
+    border: 1px solid #3a3a3a !important;
+    border-radius: 5px !important;
 
-        border: 1px solid #282828;
-        border-left: 2px solid #681919;
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.55);
+}
 
-        border-radius: 4px;
+[data-testid="stChatInput"] textarea {
+    color: #eeeeee !important;
+    background: transparent !important;
+    font-size: 14px !important;
+}
 
-        box-shadow:
-            0 12px 35px rgba(0, 0, 0, 0.35);
-    }
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #606060 !important;
+}
 
 
-    .character-label {
-        color: #8d8d8d;
+/* ---------- 스크롤바 ---------- */
 
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 3px;
+::-webkit-scrollbar {
+    width: 7px;
+}
 
-        margin-bottom: 9px;
-    }
+::-webkit-scrollbar-track {
+    background: #050505;
+}
 
+::-webkit-scrollbar-thumb {
+    background: #292929;
+    border-radius: 10px;
+}
 
-    .character-description {
-        color: #a0a0a0;
-
-        font-size: 13px;
-        line-height: 1.8;
-    }
-
-
-    /* ================================
-       채팅 메시지
-       ================================ */
-
-    [data-testid="stChatMessage"] {
-        background: transparent !important;
-        border: none !important;
-
-        padding-top: 7px !important;
-        padding-bottom: 7px !important;
-    }
-
-
-    /* AI 말풍선 */
-
-    [data-testid="stChatMessage"]:has(
-        [data-testid="chatAvatarIcon-assistant"]
-    ) [data-testid="stChatMessageContent"] {
-
-        background:
-            linear-gradient(
-                135deg,
-                #191919,
-                #0e0e0e
-            ) !important;
-
-        border: 1px solid #292929 !important;
-        border-left: 2px solid #641919 !important;
-
-        border-radius: 4px !important;
-
-        padding: 14px 18px !important;
-
-        box-shadow:
-            0 8px 28px rgba(0, 0, 0, 0.30);
-    }
-
-
-    /* 사용자 말풍선 */
-
-    [data-testid="stChatMessage"]:has(
-        [data-testid="chatAvatarIcon-user"]
-    ) [data-testid="stChatMessageContent"] {
-
-        background:
-            linear-gradient(
-                135deg,
-                #242424,
-                #181818
-            ) !important;
-
-        border: 1px solid #303030 !important;
-
-        border-radius: 4px !important;
-
-        padding: 14px 18px !important;
-    }
-
-
-    /* ================================
-       채팅 입력창
-       ================================ */
-
-    [data-testid="stChatInput"] {
-        background: transparent !important;
-    }
-
-
-    [data-testid="stChatInput"] > div {
-
-        background:
-            linear-gradient(
-                135deg,
-                #191919,
-                #0d0d0d
-            ) !important;
-
-        border: 1px solid #3a3a3a !important;
-
-        border-radius: 5px !important;
-
-        box-shadow:
-            0 0 30px rgba(0, 0, 0, 0.55);
-    }
-
-
-    [data-testid="stChatInput"] textarea {
-
-        color: #eeeeee !important;
-
-        background: transparent !important;
-
-        font-size: 14px !important;
-    }
-
-
-    [data-testid="stChatInput"] textarea::placeholder {
-        color: #606060 !important;
-    }
-
-
-    /* ================================
-       스크롤바
-       ================================ */
-
-    ::-webkit-scrollbar {
-        width: 7px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #050505;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #292929;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #444444;
-    }
+::-webkit-scrollbar-thumb:hover {
+    background: #444444;
+}
 
 </style>
 """)
 
 
 # =========================================================
-# 3. 상단 캐릭터 화면
+# 상단 화면
 # =========================================================
 
 st.html("""
@@ -330,7 +284,7 @@ st.html("""
 
 
 # =========================================================
-# 4. 캐릭터 소개 카드
+# 캐릭터 소개
 # =========================================================
 
 st.html("""
@@ -351,22 +305,21 @@ st.html("""
 
 
 # =========================================================
-# 5. Gemini API 키 가져오기
+# Gemini API 연결
 # =========================================================
 
 try:
+
     api_key = st.secrets["GEMINI_API_KEY"]
 
 except Exception:
+
     st.warning(
         "AI를 연결할 수 없습니다. 관리자에게 API 키 설정을 확인해 주세요."
     )
+
     st.stop()
 
-
-# =========================================================
-# 6. Gemini 연결
-# =========================================================
 
 client = OpenAI(
     api_key=api_key,
@@ -375,10 +328,8 @@ client = OpenAI(
 
 
 # =========================================================
-# 7. 카피타노 성격 설정
+# 카피타노 성격 설정
 # =========================================================
-# 이 내용은 화면에 표시되지 않습니다.
-# AI에게만 전달됩니다.
 
 SYSTEM_MESSAGE = """
 너는 원신의 카피타노를 기반으로 한 대화형 캐릭터다.
@@ -451,15 +402,16 @@ SYSTEM_MESSAGE = """
 
 
 # =========================================================
-# 8. 대화 기록
+# 대화 기록 저장
 # =========================================================
 
 if "chat_messages" not in st.session_state:
+
     st.session_state.chat_messages = []
 
 
 # =========================================================
-# 9. 이전 대화 표시
+# 이전 대화 화면에 표시
 # =========================================================
 
 for message in st.session_state.chat_messages:
@@ -474,15 +426,18 @@ for message in st.session_state.chat_messages:
 
     else:
 
+        # 중요:
+        # "C"를 넣으면 Streamlit이 C를 파일 경로로
+        # 인식할 수 있기 때문에 이모지를 사용합니다.
         with st.chat_message(
             "assistant",
-            avatar="C"
+            avatar="⚫"
         ):
             st.markdown(message["content"])
 
 
 # =========================================================
-# 10. 사용자 입력
+# 사용자 입력
 # =========================================================
 
 user_message = st.chat_input(
@@ -491,19 +446,27 @@ user_message = st.chat_input(
 
 
 # =========================================================
-# 11. 새로운 메시지가 들어왔을 때
+# 메시지를 입력했을 때
 # =========================================================
 
 if user_message:
 
+    # ---------------------------------------------
     # 사용자 메시지 표시
+    # ---------------------------------------------
+
     with st.chat_message(
         "user",
         avatar=":material/person:"
     ):
+
         st.markdown(user_message)
 
+
+    # ---------------------------------------------
     # 사용자 메시지 저장
+    # ---------------------------------------------
+
     st.session_state.chat_messages.append(
         {
             "role": "user",
@@ -512,9 +475,9 @@ if user_message:
     )
 
 
-    # =====================================================
-    # 12. AI에게 전달할 전체 대화
-    # =====================================================
+    # ---------------------------------------------
+    # Gemini에게 보낼 전체 대화 만들기
+    # ---------------------------------------------
 
     messages = [
         {
@@ -528,29 +491,33 @@ if user_message:
     )
 
 
-    # =====================================================
-    # 13. AI 답변 생성
-    # =====================================================
+    # ---------------------------------------------
+    # 카피타노 응답
+    # ---------------------------------------------
 
     with st.chat_message(
         "assistant",
-        avatar="C"
+        avatar="⚫"
     ):
 
         answer_box = st.empty()
 
         full_answer = ""
 
+
         try:
 
-            # 답변을 실시간으로 조금씩 받아옵니다.
             response = client.chat.completions.create(
                 model="gemini-3.5-flash-lite",
                 messages=messages,
                 stream=True
             )
 
-            # 들어오는 답변을 화면에 계속 이어서 출력합니다.
+
+            # -----------------------------------------
+            # 답변을 실시간으로 표시
+            # -----------------------------------------
+
             for chunk in response:
 
                 if not chunk.choices:
@@ -566,7 +533,11 @@ if user_message:
                         full_answer + "▌"
                     )
 
-            # 답변 완료 후 커서 제거
+
+            # -----------------------------------------
+            # 커서 제거
+            # -----------------------------------------
+
             answer_box.markdown(
                 full_answer
             )
@@ -574,7 +545,9 @@ if user_message:
 
         except Exception:
 
-            # 실제 API 오류 내용을 그대로 보여주지 않습니다.
+            # API 오류가 발생했을 때
+            # 긴 빨간색 오류창 대신 안내 문구만 표시
+
             full_answer = (
                 "……지금은 응답할 수 없습니다. "
                 "잠시 후 다시 말씀하십시오."
@@ -585,9 +558,9 @@ if user_message:
             )
 
 
-    # =====================================================
-    # 14. AI 답변 저장
-    # =====================================================
+    # ---------------------------------------------
+    # AI 답변 저장
+    # ---------------------------------------------
 
     st.session_state.chat_messages.append(
         {
